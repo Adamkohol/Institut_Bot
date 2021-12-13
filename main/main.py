@@ -122,7 +122,7 @@ print("PROGRAM START")
 @dp.message_handler(commands="block")
 async def cmd_block(message: types.Message):
     await asyncio.sleep(10.0)  # Здоровый сон на 10 секунд
-    await message.reply("Вы заблокированы")
+    await message.answer("Вы заблокированы")
 
 
 @dp.errors_handler(exception=BotBlocked)
@@ -138,12 +138,12 @@ async def error_bot_blocked(update: types.Update, exception: BotBlocked):
 
 @dp.message_handler(commands="start")  # новый обработчик
 async def cmd_test1(message: types.Message):  # await топерь обязателен
-    await message.reply("start is working")
+    await message.answer("start is working")
 
 
 @dp.message_handler(commands="help")
 async def cmd_test1(message: types.Message):
-    await message.reply("help is working")
+    await message.answer("help is working")
 
 
 @dp.message_handler()
@@ -159,9 +159,9 @@ async def cmd_test1(message: types.Message):
             if tg['tag'] == tag:
                 responses = tg['responses']
 
-        await message.reply(random.choice(responses))
+        await message.answer(random.choice(responses))
     else:
-        await message.reply("Я не понял вас. Попробуйте снова")
+        await message.answer("Я не понял вас. Попробуйте снова")
 
 
 if __name__ == "__main__":
