@@ -125,6 +125,7 @@ async def cmd_block(message: types.Message):
     await message.answer("Вы заблокированы")
 
 
+
 @dp.errors_handler(exception=BotBlocked)
 async def error_bot_blocked(update: types.Update, exception: BotBlocked):
     # Update: объект события от Telegram. Exception: объект исключения
@@ -165,5 +166,5 @@ async def cmd_test1(message: types.Message):
 
 
 if __name__ == "__main__":
-    # Запуск бота
+
     executor.start_polling(dp, skip_updates=True)
