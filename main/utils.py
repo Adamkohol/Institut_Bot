@@ -3,5 +3,6 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 class BotStates(StatesGroup):
-    Menu = State()
-    Dialog = State()
+    Authorized = State()
+    waiting_for_password = State()
+    Student = State()
