@@ -123,4 +123,4 @@ async def chat(message: types.Message):
 
         await message.answer(random.choice(responses))
     else:
-        await message.answer("Я не понял вас. Попробуйте снова")
+        pass
