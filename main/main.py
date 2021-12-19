@@ -102,7 +102,7 @@ def text_has_emoji(text):
 async def CHECKPASS(message: types.Message):  # await теперь обязателен
     await message.answer("Введите пароль")
     if message.text != "Отмена":
-        bot.register_next_step_handler(message, check_password);
+        await check_password
     else:
         pass
 
