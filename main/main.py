@@ -151,24 +151,25 @@ async def StudBUTTON(message: types.Message):
 async def start_handler(message: types.Message):
     ids = [964783056, 720761725, 875674769, 608973271]
     global AUTHORIZATION_STATE
+    name = message.from_user.first_name
     if message.from_user.id not in ids:
         AUTHORIZATION_STATE = False
-        await message.answer('Ошибся адресом, дружок')
+        await message.answer(name + ", похоже вы не преподаватель, не знаю где вы узнали эту команду, но к сожалению, вам доступ запрещен \nПопробуйте воспользоваться командой для студента!")
     else:
         AUTHORIZATION_STATE = True
-        await message.answer("Привет, чем займёмся? :)")
+        await message.answer("Рад вас видеть " + name + ",чем займёмся? :)")
 
 
 # ПРОВЕРКА ПАРОЛЯ ПРОВЕРКА ПАРОЛЯ ПРОВЕРКА ПАРОЛЯ ПРОВЕРКА ПАРОЛЯ ПРОВЕРКА ПАРОЛЯ ПРОВЕРКА ПАРОЛЯ ПРОВЕРКА ПАРОЛЯ ПРОВЕР
 @dp.message_handler(commands="start")  # новый обработчик
 async def MENU(message: types.Message):  # await теперь обязателен
     if AUTHORIZATION_STATE == False:
-        await message.answer("\t Здравствуй!🤖 Бот для учебы, вот список команд:"
+        await message.answer("\t Здравствуй!🤖 Я Бот для учебы, вот список команд:"
                              " \n /start - начало работы \n /help - 🛠 помощь \n /faq - ⁉ часто задаваемые вопросы \n"
                              " /educationmaterial - 📚️ учебный материал \n"
                              " /testcheck - 🧩 тесты для самоподготовки\n", reply_markup=nav.mainMenu)
     elif AUTHORIZATION_STATE == True:
-        await message.answer("\t Здравствуй!🤖 Бот для учебы, вот список команд:"
+        await message.answer("\t Здравствуй!🤖 Я Бот для учебы, вот список команд:"
                              " \n /start - начало работы \n /help - 🛠 помощь \n /faq - ⁉ часто задаваемые вопросы \n"
                              " /remindlesson - 🔔 напомнить о занятии \n /reminddeadline - 🔔 напомнить о дедлайне \n "
                              "/educationresult - 🎓 успеваемость\n"
@@ -178,10 +179,41 @@ async def MENU(message: types.Message):  # await теперь обязателе
 
 @dp.message_handler(commands="help")  # напомнить о занятии
 async def HELP(message: types.Message):
+    tg_analytic.statistics(message.chat.id,'Использована команда ')
     if AUTHORIZATION_STATE == False: #студент
         await shelpOut(message)
     elif AUTHORIZATION_STATE == True: #препод
         await helpOut(message)
+
+@dp.message_handler(commands="faq")  # напомнить о занятии
+async def FAQ(message: types.Message):
+    keyboard = types.InlineKeyboardMarkup()
+    keyboard.add(types.InlineKeyboardButton(text="1", callback_data="one"))
+    keyboard.add(types.InlineKeyboardButton(text="2", callback_data="two"))
+    keyboard.add(types.InlineKeyboardButton(text="3", callback_data="three"))
+    await message.answer('Чсасто задаваемые вопросы\nНапишите цифру вопроса чтобы получить ответ!\n'
+                        '1. Когда состоится зачет?\n'
+                        '2. Сколько заданий необходимо выполнить для допуска к зачету?\n'
+                        '3. сколько баллов необходимо набрать для успешной сдачи зачета?', reply_markup=keyboard)
+#ОБРАБОТЧИКИ КНОПОК ДЛЯ ВОПРОСОВ ОБРАБОТЧИКИ КНОПОК ДЛЯ ВОПРОСОВ ОБРАБОТЧИКИ КНОПОК ДЛЯ ВОПРОСОВ ОБРАБОТЧИКИ КНОПОК ДЛЯ
+
+@dp.callback_query_handler(text="one")
+async def ONE(call: types.CallbackQuery):
+    await call.message.answer('Зачет состоится 25 декабря')
+    await call.answer()
+
+@dp.callback_query_handler(text="two")
+async def TWO(call: types.CallbackQuery):
+    await call.message.answer('Для допуска к зачету необходимо выполнить 5 заданий')
+    await call.answer()
+
+@dp.callback_query_handler(text="three")
+async def THREE(call: types.CallbackQuery):
+    await call.message.answer('Для сдачи зачета необходимо набрать не менее 50 баллов')
+    await call.answer()
+
+#ОБРАБОТЧИКИ КНОПОК ДЛЯ ВОПРОСОВ ОБРАБОТЧИКИ КНОПОК ДЛЯ ВОПРОСОВ ОБРАБОТЧИКИ КНОПОК ДЛЯ ВОПРОСОВ ОБРАБОТЧИКИ КНОПОК ДЛЯ
+
 
 @dp.message_handler(commands="remindlesson")  # напомнить о занятии
 async def REMINDLES(message: types.Message):
@@ -228,20 +260,19 @@ async def CONGRATS(message: types.Message):
 # ОБЩИЙ ОБРАБОТЧИК ОБЩИЙ ОБРАБОТЧИК ОБЩИЙ ОБРАБОТЧИК ОБЩИЙ ОБРАБОТЧИК ОБЩИЙ ОБРАБОТЧИК ОБЩИЙ ОБРАБОТЧИК ОБЩИЙ ОБРАБОТЧИК
 @dp.message_handler()
 async def SCRIPT(message: types.Message):
-    if str(message.text[
-           :10]).lower() == 'статистика':
-        # код Полины
-        '''inp = message.text.split(' ')
-        if 'txt' in inp or 'тхт' in inp:
-            tg_analytic.analysis(inp, message.chat.id)
-            with open('%s.txt' % message.chat.id, 'r', encoding='UTF-8') as file:
-                await message.answer_document(file)
-                tg_analytic.remove(message.chat.id)
-        else:
-            messages = tg_analytic.analysis(inp, message.chat.id)
-            await message.answer(message.chat.id, messages)'''
+    # if str(message.text[:10]).lower() == 'статистика':
+    #     # код Полины
+    #     inp = message.text.split(' ')
+    #     if 'txt' in inp or 'тхт' in inp:
+    #         tg_analytic.analysis(inp, message.chat.id)
+    #         with open('%s.txt' % message.chat.id, 'r', encoding='UTF-8') as file:
+    #             await bot.send_document(message.chat.id, file)
+    #             tg_analytic.remove(message.chat.id)
+    #     else:
+    #         messages = tg_analytic.analysis(inp, message.chat.id)
+    #         await message.answer(messages)
 
-    elif "/" not in str(message.text):
+    if "/" not in str(message.text):
         if text_has_emoji(str(message.text)) is False:
             await chat(message)  # Код Давида
         elif AUTHORIZATION_STATE == True:
